@@ -1,0 +1,16 @@
+{% extends 'women/base.html' %}
+
+
+{% block content %}
+<h3>{{ category_name }}</h3>
+<p></p>
+<h2>{{ post_title }}</h2>
+
+{% if photo %}
+<p><img class="img-article-left" src="{{ photo.url }}"></p>
+{% endif %}
+
+<p>{{ post_detail|linebreaks }}
+<h4>Date published: {{ date }}</h4>
+<p>
+{% endblock %}
