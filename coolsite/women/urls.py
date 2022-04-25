@@ -1,21 +1,22 @@
 from django.urls import path, re_path
-from women.views import (index,
-                         categories,
+from women.views import (about,
                          archive,
-                         about,
-                         add_article,
                          feedback,
                          sign_up,
-                         sign_in,
-                         post_detail,
-                         show_category)
+                         sign_in,)
+
+from women.views import WomenList, WomenCategory, PostDetail, AddArticle
 
 urlpatterns = [
-    path('', index, name="home"),
-    path('post/<int:post_id>/', post_detail, name='post_detail'),
-    path('category/<int:cat_id>/', show_category, name="category"),
+#    path('', index, name="home"),
+    path('', WomenList.as_view(), name="home"),
+    path('post/<int:post_id>/', PostDetail.as_view(), name='post_detail'),
+#    path('post/<int:post_id>/', post_detail, name='post_detail'),
+#    path('category/<int:cat_id>/', show_category, name="category"),
+    path('category/<int:cat_id>/', WomenCategory.as_view(), name="category"),
     path('about/', about, name="about"),
-    path('add/', add_article, name="add_article"),
+#    path('add/', add_article, name="add_article"),
+    path("add/", AddArticle.as_view(), name="add_article"),
     path('feedback/', feedback, name='feedback'),
     path('sign_up', sign_up, name='sign_up'),
     path('sign_in', sign_in, name='sign_in'),

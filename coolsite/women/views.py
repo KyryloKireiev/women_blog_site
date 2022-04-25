@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
+from django.views.generic import ListView, DetailView, CreateView
+
 from women.models import Women, Category
 from women.forms import AddNewArticle
 
@@ -10,6 +12,26 @@ MENU = [{"title": "About site", "url_name": "about"},
         {"title": "Sign in", "url_name": "sign_in"}]
 
 
+class WomenList(ListView):
+    model = Women
+
+    template_name = "women/index.html"
+    context_object_name = "posts"
+    extra_context = {"title": "Main page"}
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cats = Category.objects.all()
+        context["menu"] = MENU
+        context["cats"] = cats
+        context["cat_selected"] = 0
+        return context
+
+    def get_queryset(self):
+        return Women.objects.filter(is_published=True)
+
+
+"""
 def index(request):
     posts = Women.objects.all()
     cats = Category.objects.all()
@@ -21,6 +43,7 @@ def index(request):
                "cat_selected": 0}
 
     return render(request, "women/index.html", context=context)
+"""
 
 
 def about(request):
@@ -28,6 +51,29 @@ def about(request):
                                                 "menu": MENU})
 
 
+class PostDetail(DetailView):
+    model = Women
+    template_name = "women/detail.html"
+    pk_url_kwarg = "post_id"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        model = Women.objects.get(id=self.kwargs["post_id"])
+        category = Category.objects.get(id=model.cat_id)
+        cats = Category.objects.all()
+
+        context["category_name"] = category.name
+        context["post_title"] = model.title
+        context["post_detail"] = model.content
+        context["menu"] = MENU
+        context["date"] = model.time_update
+        context["photo"] = model.photo
+        context["cats"] = cats
+        context["cat_selected"] = category.id
+        return context
+
+
+"""
 def post_detail(request, post_id):
     model = Women.objects.get(id=post_id)
     category = Category.objects.get(id=model.cat_id)
@@ -44,10 +90,30 @@ def post_detail(request, post_id):
             "cat_selected": category.id}
 
     return render(request, "women/detail.html", context=post)
+"""
 
 
+class WomenCategory(ListView):
+    model = Women
+    context_object_name = "posts"
+    template_name = "women/index.html"
+    allow_empty = False
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cats = Category.objects.all()
+        context["title"] = "Category - " + str(context["posts"][0].cat)
+        context["menu"] = MENU
+        context["cats"] = cats
+        context["cat_selected"] = self.kwargs["cat_id"]
+        return context
+
+    def get_queryset(self):
+        return Women.objects.filter(cat__id=self.kwargs["cat_id"], is_published=True)
+
+
+"""
 def show_category(request, cat_id):
-    # return HttpResponse(f"Category id = {cat_id}")
     women = Women.objects.filter(cat_id=cat_id)
     cats = Category.objects.all()
 
@@ -58,8 +124,23 @@ def show_category(request, cat_id):
                "cat_selected": cat_id}
 
     return render(request, "women/index.html", context=context)
+"""
 
 
+class AddArticle(CreateView):
+    form_class = AddNewArticle
+    template_name = "women/add_article.html"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        cats = Category.objects.all()
+        context = super().get_context_data(**kwargs)
+        context["menu"] = MENU
+        context["title"] = "Add new article"
+        context["cats"] = cats
+        return context
+
+
+"""
 def add_article(request):
     if request.method == 'POST':
         form = AddNewArticle(request.POST, request.FILES)
@@ -74,6 +155,7 @@ def add_article(request):
                "form": form}
 
     return render(request, "women/add_article.html", context=context)
+"""
 
 
 def feedback(request):
