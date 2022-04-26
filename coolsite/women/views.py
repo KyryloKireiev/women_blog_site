@@ -1,20 +1,20 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from women.models import Women, Category
 from women.forms import AddNewArticle
 
 MENU = [{"title": "About site", "url_name": "about"},
         {"title": "Add article", "url_name": "add_article"},
-        {"title": "Feedback", "url_name": "feedback"},
-        {"title": "Sign up", "url_name": "sign_up"},
-        {"title": "Sign in", "url_name": "sign_in"}]
+        {"title": "Feedback", "url_name": "feedback"}]
 
 
 class WomenList(ListView):
     model = Women
-
+    paginate_by = 5
     template_name = "women/index.html"
     context_object_name = "posts"
     extra_context = {"title": "Main page"}
@@ -98,6 +98,7 @@ class WomenCategory(ListView):
     context_object_name = "posts"
     template_name = "women/index.html"
     allow_empty = False
+    paginate_by = 3
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -127,9 +128,10 @@ def show_category(request, cat_id):
 """
 
 
-class AddArticle(CreateView):
+class AddArticle(LoginRequiredMixin, CreateView):
     form_class = AddNewArticle
     template_name = "women/add_article.html"
+    login_url = reverse_lazy("home")
 
     def get_context_data(self, *, object_list=None, **kwargs):
         cats = Category.objects.all()
