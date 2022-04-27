@@ -1,3 +1,6 @@
+from django.contrib.auth import logout, login
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.urls import reverse_lazy
@@ -5,7 +8,7 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from women.models import Women, Category
-from women.forms import AddNewArticle
+from women.forms import AddNewArticle, SignUpNewUser
 
 MENU = [{"title": "About site", "url_name": "about"},
         {"title": "Add article", "url_name": "add_article"},
@@ -28,7 +31,7 @@ class WomenList(ListView):
         return context
 
     def get_queryset(self):
-        return Women.objects.filter(is_published=True)
+        return Women.objects.filter(is_published=True).select_related("cat")
 
 
 """
@@ -73,6 +76,7 @@ class PostDetail(DetailView):
         return context
 
 
+
 """
 def post_detail(request, post_id):
     model = Women.objects.get(id=post_id)
@@ -110,7 +114,7 @@ class WomenCategory(ListView):
         return context
 
     def get_queryset(self):
-        return Women.objects.filter(cat__id=self.kwargs["cat_id"], is_published=True)
+        return Women.objects.filter(cat__id=self.kwargs["cat_id"], is_published=True).select_related("cat")
 
 
 """
@@ -131,7 +135,7 @@ def show_category(request, cat_id):
 class AddArticle(LoginRequiredMixin, CreateView):
     form_class = AddNewArticle
     template_name = "women/add_article.html"
-    login_url = reverse_lazy("home")
+    login_url = reverse_lazy("sign_in")
 
     def get_context_data(self, *, object_list=None, **kwargs):
         cats = Category.objects.all()
@@ -160,21 +164,54 @@ def add_article(request):
 """
 
 
+class SignUpUser(CreateView):
+    form_class = SignUpNewUser
+    template_name = "women/sign_up.html"
+    success_url = reverse_lazy("sign_in")
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        cats = Category.objects.all()
+        context = super().get_context_data(**kwargs)
+        context["menu"] = MENU
+        context["title"] = "Sign up"
+        context["cats"] = cats
+        return context
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect("home")
+
+
+class LoginUser(LoginView):
+    form_class = AuthenticationForm
+    template_name = "women/login.html"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        cats = Category.objects.all()
+        context = super().get_context_data(**kwargs)
+        context["menu"] = MENU
+        context["title"] = "Sign in"
+        context["cats"] = cats
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("home")
+
+
+def logout_user(request):
+    logout(request)
+    return redirect("sign_in")
+
+
 def feedback(request):
     return HttpResponse(f"<h2>Feedback</h2>")
 
 
-def sign_in(request):
-    return HttpResponse(f"<h3>Sign in page</h3>")
-
-
-def sign_up(request):
-    return HttpResponse("<h3>Sign up page</h3>")
-
-
-def categories(request, cat_id):
-    return HttpResponse(f"<h1>Categories page</h1>"
-                        f"<p>This is page number {cat_id} </p>")
+def user_test_request(request):
+    return HttpResponse(f"<h1>Test user request</h1>"
+                        f"<p>This is user number {request.user.id} </p>"
+                        f"<p>email: {request.user.email} </p>")
 
 
 def archive(request, year):

@@ -2,10 +2,10 @@ from django.urls import path, re_path
 from women.views import (about,
                          archive,
                          feedback,
-                         sign_up,
-                         sign_in,)
+                         logout_user,
+                         user_test_request)
 
-from women.views import WomenList, WomenCategory, PostDetail, AddArticle
+from women.views import WomenList, WomenCategory, PostDetail, AddArticle, SignUpUser, LoginUser
 
 urlpatterns = [
 #    path('', index, name="home"),
@@ -18,7 +18,9 @@ urlpatterns = [
 #    path('add/', add_article, name="add_article"),
     path("add/", AddArticle.as_view(), name="add_article"),
     path('feedback/', feedback, name='feedback'),
-    path('sign_up', sign_up, name='sign_up'),
-    path('sign_in', sign_in, name='sign_in'),
+    path('sign_up/', SignUpUser.as_view(), name='sign_up'),
+    path('sign_in/', LoginUser.as_view(), name='sign_in'),
+    path('logout/', logout_user, name="logout"),
+    path('test_user/', user_test_request, name="test_user"),
     re_path(r'^archive/(?P<year>[0-9]{4})/', archive),
 ]
