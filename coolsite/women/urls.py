@@ -1,11 +1,18 @@
 from django.urls import path, re_path
 from women.views import (about,
                          archive,
-                         feedback,
                          logout_user,
                          user_test_request)
 
-from women.views import WomenList, WomenCategory, PostDetail, AddArticle, SignUpUser, LoginUser
+from women.views import (
+    WomenList,
+    WomenCategory,
+    PostDetail,
+    AddArticle,
+    SignUpUser,
+    LoginUser,
+    ContactFormView,
+)
 
 urlpatterns = [
 #    path('', index, name="home"),
@@ -17,7 +24,7 @@ urlpatterns = [
     path('about/', about, name="about"),
 #    path('add/', add_article, name="add_article"),
     path("add/", AddArticle.as_view(), name="add_article"),
-    path('feedback/', feedback, name='feedback'),
+    path('feedback/', ContactFormView.as_view(), name='feedback'),
     path('sign_up/', SignUpUser.as_view(), name='sign_up'),
     path('sign_in/', LoginUser.as_view(), name='sign_in'),
     path('logout/', logout_user, name="logout"),

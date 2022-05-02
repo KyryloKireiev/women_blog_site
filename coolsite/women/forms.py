@@ -1,3 +1,4 @@
+from captcha.fields import CaptchaField
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -50,4 +51,11 @@ class SignUpNewUser(UserCreationForm):
             "password1": forms.PasswordInput(attrs={"class": "form-input"}),
             "password2": forms.PasswordInput(attrs={"class": "form-input"})
         }
+
+
+class ContactForm(forms.Form):
+    name = forms.CharField(label="Your name", max_length=50)
+    email = forms.EmailField(label="Email")
+    content = forms.CharField(widget=forms.Textarea(attrs={"cols": 150, "rows": 20}))
+    captcha = CaptchaField()
 

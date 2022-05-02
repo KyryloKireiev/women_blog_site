@@ -1,14 +1,14 @@
 from django.contrib.auth import logout, login
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from women.models import Women, Category
-from women.forms import AddNewArticle, SignUpNewUser
+from women.forms import AddNewArticle, SignUpNewUser, ContactForm
 
 MENU = [{"title": "About site", "url_name": "about"},
         {"title": "Add article", "url_name": "add_article"},
@@ -50,8 +50,13 @@ def index(request):
 
 
 def about(request):
-    return render(request, "women/about.html", {"title": "About site",
-                                                "menu": MENU})
+    cats = Category.objects.all()
+
+    context = {"title": "About us",
+               "cats": cats,
+               "menu": MENU}
+
+    return render(request, "women/about.html", context=context)
 
 
 class PostDetail(DetailView):
@@ -74,7 +79,6 @@ class PostDetail(DetailView):
         context["cats"] = cats
         context["cat_selected"] = category.id
         return context
-
 
 
 """
@@ -204,8 +208,21 @@ def logout_user(request):
     return redirect("sign_in")
 
 
-def feedback(request):
-    return HttpResponse(f"<h2>Feedback</h2>")
+class ContactFormView(FormView):
+    form_class = ContactForm
+    template_name = "women/contact.html"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        cats = Category.objects.all()
+        context = super().get_context_data(**kwargs)
+        context["menu"] = MENU
+        context["title"] = "Contact us"
+        context["cats"] = cats
+        return context
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return redirect("home")
 
 
 def user_test_request(request):
