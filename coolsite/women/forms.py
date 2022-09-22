@@ -58,4 +58,3 @@ class ContactForm(forms.Form):
     email = forms.EmailField(label="Email")
     content = forms.CharField(widget=forms.Textarea(attrs={"cols": 150, "rows": 20}))
     captcha = CaptchaField()
-
