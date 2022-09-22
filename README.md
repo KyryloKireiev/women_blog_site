@@ -1,8 +1,8 @@
 # Simple blog using Django and Jinja templating
 
 Blog site allows you to create and edit articles. The user can register on the site and create, edit, read,
-or delete articles. Unregistered user can only read articles. Also, you can register as superuser and
-manage the site by the admin panel. The app is written in Python using 
+or delete articles. You can categorize articles. Unregistered user can only read articles. Also, you can register as superuser and
+manage the site with the admin panel. The app is written in Python using 
 Django and Jinja templating.
 
 ## Features
@@ -22,7 +22,7 @@ Django and Jinja templating.
 
 Endpoints:
 + GET http://127.0.0.1:8000/ - view home page
-+ GET /post/<int:post_id>/ - view detail article's information
++ GET /post/<int:post_id>/ - view article's detailed information
 + GET /category/<int:cat_id>/ - filtering articles by category
 + GET /about/ - get about page where you can find information about site
 + POST /add/ - you can add new article (if you sing in)
