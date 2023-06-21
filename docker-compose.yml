@@ -1,0 +1,30 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
+    volumes:
+      - .:/women_blog_site
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=psql
+      - DB_NAME=my_database
+      - DB_USER=my_user
+      - DB_PASS=my_password
+
+
+  db:
+    image: postgres:latest
+    restart: always
+    container_name: "psql"
+    environment:
+      - POSTGRES_USER=my_user
+      - POSTGRES_PASSWORD=my_password
+      - POSTGRES_DB=my_database
+    ports:
+      - "5432:5432"

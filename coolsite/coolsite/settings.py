@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-l*x=2wjki6vi-hc13t&f9i(x1+j3q*t&$p*jo$+bqhl5n_6d*1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -82,8 +82,12 @@ WSGI_APPLICATION = 'coolsite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'my_database',
+        'USER': 'my_user',
+        'PASSWORD': 'my_password',
+        'HOST': "psql",
+        'PORT': '5432',
     }
 }
 
@@ -136,4 +140,6 @@ MEDIA_URL = "/media/"
 
 INTERNAL_IPS = [
     "127.0.0.1",
+    "localhost",
+    "0.0.0.0",
 ]
