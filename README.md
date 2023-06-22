@@ -33,3 +33,22 @@ Endpoints:
 
 
 Tools used during development: black, flake8
+
+## Installation
+
++ You can clone master branch and work with it like with default Django app
++ git@github.com:KyryloKireiev/women_blog_site.git
++ All commands are in the Makefile
++ Django app in master branch using sqlite3 database
+
+## One-clik installation
+
++ You can also install the application in one click
++ Use "docker-compose-version" branch
++ Use command:
+```make web.install```
++ This command creates and runs docker-compose services with Django app and postgres db, then it fills 
+the database with test data and creates superuser to access to Django admin penal.
++ Also, you can see more commands in the makefile
++ Default server starts at ```http://0.0.0.0:8000/```
+
