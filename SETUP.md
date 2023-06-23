@@ -6,19 +6,24 @@ To use blog site you need to install Python 3.10 or higher.
 
 Install all requirements:
 + use command: "pip install -r requirements.txt" in the root directory of the project
++ also, you can use Make commands. Use command: ```make requirements```
 
 Create a database:
-+ use command: "python manage.py migrate"
++ use command: ```python manage.py migrate``` 
 + you need to enter the commands in the directory /coolsite/, where manage.py is
++ also, you can use Make command: ```make db``` in the root directory of the project
 
 To start server:
 + use command: "python manage.py runserver"
++ or use Make command ```make run```
 + server starts on the local host: "http://127.0.0.1:8000/"
 
-Also, you can use commands from Makefile:
-+ "make run" - to start server
-+ "make mdb" - to make migrations
-+ "make db" - to migrate
+Makefile commands:
++ ```make help``` - get all Makefile commands
++ ```make run``` - to start server
++ ```make mdb``` - to make migrations
++ ```make db``` - to migrate
++ ```make shell``` - enter Django app shell
 
 You can see all endpoints of project in README.md in the root directory of the project
 
