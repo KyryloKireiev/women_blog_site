@@ -40,6 +40,7 @@ Tools used during development: black, flake8
 + git@github.com:KyryloKireiev/women_blog_site.git
 + All commands are in the Makefile
 + Django app in master branch using sqlite3 database
++ Detail installation instruction you can found in ```SETUP.md``` file
 
 ## One-clik installation
 
