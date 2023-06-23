@@ -51,4 +51,3 @@ Tools used during development: black, flake8
 the database with test data and creates superuser to access to Django admin penal.
 + Also, you can see more commands in the makefile
 + Default server starts at ```http://0.0.0.0:8000/```
-
