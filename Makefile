@@ -4,7 +4,17 @@
 		mdb \
 		db \
 		web.up\
+		web.stop\
+		web.down\
 		web.shell\
+		web.db.shell\
+		web.logs\
+		web.db\
+		web.fill_db\
+		web.flush\
+		web.user\
+		web.def_user\
+		web.install\
 
 
 PIP_VERSION = 22.0.4
@@ -36,8 +46,16 @@ web.stop: venv/bin/activate ## stop docker-compose services
 	. venv/bin/activate; docker-compose stop web && \
 	. venv/bin/activate; docker-compose stop db
 
+web.down: venv/bin/activate ## down docker-compose container
+	. venv/bin/activate; docker-compose down
+
 web.shell: venv/bin/activate ## enter docker-compose Django app service shell
 	. venv/bin/activate && docker-compose exec web /bin/sh
+
+web.db.shell: venv/bin/activate ## enter docker-compose psql database shell shell
+	. venv/bin/activate; docker-compose exec db psql -U my_user -d my_database
+	# Get all tables names:
+	# SELECT table_name FROM information_schema.tables WHERE table_schema='public';
 
 web.logs: venv/bin/activate ## enter docker-compose web service logs
 	. venv/bin/activate && docker-compose logs -f web
