@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 coolsite/media
+coolsite/static
 # C extensions
 *.so
 *.DS_Store

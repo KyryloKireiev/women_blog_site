@@ -19,6 +19,7 @@ from django.urls import path, include
 
 from coolsite import settings
 from women.views import page_not_found
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,5 +34,6 @@ if settings.DEBUG:
         path('__debug__/', include(debug_toolbar.urls)),
                   ] + urlpatterns
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += staticfiles_urlpatterns()
 
 handler404 = page_not_found
