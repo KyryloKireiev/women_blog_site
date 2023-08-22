@@ -27,7 +27,7 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['http://0.0.0.0']
+CSRF_TRUSTED_ORIGINS = ['http://0.0.0.0', 'https://mytestdomain.quest/']
 
 
 # Application definition
